@@ -1,1 +1,1 @@
-export class Agent {}
+export class AgentEntity {}
