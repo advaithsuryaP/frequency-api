@@ -1,7 +1,7 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ConfigService } from '@nestjs/config';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { PostEntity } from 'src/posts/entities/post.entity';
+import { UserEntity } from 'src/modules/users/entities/user.entity';
+import { PostEntity } from 'src/modules/posts/entities/post.entity';
 
 export const databaseConfig = (configService: ConfigService) => {
     const url = configService.get<string>('DATABASE_URL');
