@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'users' })
@@ -19,7 +19,6 @@ export class UserEntity {
     email: string;
 
     @BeforeInsert()
-    @BeforeUpdate()
     async hashPassword(): Promise<void> {
         if (this.password) {
             const salt = await bcrypt.genSalt(10);
