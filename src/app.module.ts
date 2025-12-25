@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './config/database.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { HashingModule } from './common/hashing/hashing.module';
+import { LoggingModule } from './common/logging/logging.module';
 
 @Module({
     imports: [
@@ -22,7 +23,8 @@ import { HashingModule } from './common/hashing/hashing.module';
             inject: [ConfigService]
         }),
         AuthModule,
-        HashingModule
+        HashingModule,
+        LoggingModule
     ],
     controllers: [AppController],
     providers: [AppService]
