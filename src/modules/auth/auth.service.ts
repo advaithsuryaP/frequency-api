@@ -1,29 +1,42 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserLoginDto } from './dto/user-login.dto';
+import { SignInDto } from './dto/sign-in.dto';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { UserQueryService } from '../users/adapters/user-query/user-query.service';
-import { PublicUser } from '../users/dto/public-user.interface';
+import { JwtContract } from './contracts/jwt.contract';
+import { JwtService } from '@nestjs/jwt';
+import { SignInResponse } from './dto/sign-in.response';
 
 @Injectable()
 export class AuthService {
     constructor(
+        private readonly jwtService: JwtService,
         private readonly hashingService: HashingService,
         private readonly userQueryService: UserQueryService
     ) {}
 
-    async login(userLoginDto: UserLoginDto): Promise<PublicUser> {
-        const user = await this.userQueryService.findUserByUsername(userLoginDto.username);
+    async login(signInDto: SignInDto): Promise<SignInResponse> {
+        const user = await this.userQueryService.findUserByUsername(signInDto.username);
 
         if (!user) {
             throw new UnauthorizedException('Invalid username or password');
         }
 
-        const ok = await this.hashingService.compare(userLoginDto.password, user.hashedPassword);
+        const ok = await this.hashingService.compare(signInDto.password, user.hashedPassword);
         if (!ok) {
             throw new UnauthorizedException('Invalid username or password');
         }
 
+        const payload: JwtContract = {
+            sub: user.id,
+            username: user.username
+        };
+
+        const accessToken = await this.jwtService.signAsync(payload);
+
         const { hashedPassword, ...publicUser } = user;
-        return publicUser;
+        return {
+            accessToken,
+            user: publicUser
+        };
     }
 }
