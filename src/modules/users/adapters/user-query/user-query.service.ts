@@ -8,11 +8,19 @@ import { AuthUserContract } from '../contracts/auth-user.contract';
 export class UserQueryService {
     constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
-    async getAuthUserContract(username: string): Promise<AuthUserContract | null> {
+    async findUserByUsername(username: string): Promise<AuthUserContract | null> {
         const user = await this.userRepository.findOne({
             where: { username },
             select: ['id', 'username', 'displayName', 'email', 'password']
         });
-        return user;
+        if (!user) return null;
+
+        return {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            hashedPassword: user.password,
+            displayName: user.displayName
+        };
     }
 }

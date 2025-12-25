@@ -12,18 +12,18 @@ export class AuthService {
     ) {}
 
     async login(userLoginDto: UserLoginDto): Promise<PublicUser> {
-        const user = await this.userQueryService.getAuthUserContract(userLoginDto.username);
+        const user = await this.userQueryService.findUserByUsername(userLoginDto.username);
 
         if (!user) {
             throw new UnauthorizedException('Invalid username or password');
         }
 
-        const ok = await this.hashingService.compare(userLoginDto.password, user.password);
+        const ok = await this.hashingService.compare(userLoginDto.password, user.hashedPassword);
         if (!ok) {
             throw new UnauthorizedException('Invalid username or password');
         }
 
-        const { password, ...publicUser } = user;
+        const { hashedPassword, ...publicUser } = user;
         return publicUser;
     }
 }
