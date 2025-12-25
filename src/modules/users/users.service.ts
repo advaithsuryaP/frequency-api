@@ -1,23 +1,31 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HashingService } from 'src/common/hashing/hashing.service';
+import { PublicUser } from './dto/public-user.interface';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+    constructor(
+        private readonly hashingService: HashingService,
+        @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>
+    ) {}
 
-    async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    async create(createUserDto: CreateUserDto): Promise<PublicUser> {
+        const hashedPassword = await this.hashingService.hash(createUserDto.password);
+        const user = this.userRepository.create({ ...createUserDto, password: hashedPassword });
         try {
-            const user = this.userRepository.create(createUserDto);
-            return await this.userRepository.save(user);
+            const savedUser = await this.userRepository.save(user);
+            const { password, ...publicUser } = savedUser;
+            return publicUser;
         } catch (error) {
-            if (error.code === '23505') {
+            if (error?.code === '23505') {
                 throw new ConflictException('Username or email already exists');
             }
-            throw new InternalServerErrorException('An error occurred while creating the user');
+            throw error;
         }
     }
 
