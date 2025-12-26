@@ -1,7 +1,5 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ConfigService } from '@nestjs/config';
-import { UserEntity } from 'src/modules/users/entities/user.entity';
-import { PostEntity } from 'src/modules/posts/entities/post.entity';
 
 export const databaseConfig = (configService: ConfigService) => {
     const url = configService.get<string>('DATABASE_URL');
@@ -14,7 +12,7 @@ export const databaseConfig = (configService: ConfigService) => {
         type: 'postgres',
         synchronize: true, // TODO: Remove in production
         autoLoadEntities: true,
-        entities: [UserEntity, PostEntity],
+        entities: [__dirname + '/../modules/**/*.entity{.ts,.js}'],
         ssl: { rejectUnauthorized: false }
     } as PostgresConnectionOptions;
 };

@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { PublicUser } from './dto/public-user.interface';
+import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 
 @Controller('users')
 export class UsersController {
@@ -20,17 +21,20 @@ export class UsersController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<UserEntity> {
+    async findOne(@Param() params: UuidParamDto): Promise<UserEntity> {
+        const { id } = params;
         return await this.usersService.findOne(id);
     }
 
     @Patch(':id')
-    async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    async update(@Param() params: UuidParamDto, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
+        const { id } = params;
         return await this.usersService.update(id, updateUserDto);
     }
 
     @Delete(':id')
-    async remove(@Param('id') id: string): Promise<void> {
+    async remove(@Param() params: UuidParamDto): Promise<void> {
+        const { id } = params;
         await this.usersService.remove(id);
     }
 }
