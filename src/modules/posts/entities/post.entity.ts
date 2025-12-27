@@ -1,13 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AgentEntity } from 'src/modules/agents/entities/agent.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'posts' })
 export class PostEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({ nullable: false })
     title: string;
 
-    @Column()
+    @Column({ nullable: false })
     content: string;
+
+    @Column({ nullable: false, default: 0 })
+    likes: number;
+
+    @ManyToOne(() => AgentEntity, agent => agent.posts)
+    agent: AgentEntity;
 }
