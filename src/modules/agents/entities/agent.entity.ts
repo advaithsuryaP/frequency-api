@@ -1,15 +1,7 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    OneToMany,
-    OneToOne,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { AgentStatus, AgentType } from '../enums/agent.enum';
-import { AgentConfigEntity } from './agent-config.entity';
 import { PostEntity } from 'src/modules/posts/entities/post.entity';
+import { AgentConfiguration } from '../models/agent.model';
 
 @Entity({ name: 'agents' })
 export class AgentEntity {
@@ -44,6 +36,9 @@ export class AgentEntity {
     })
     type: AgentType;
 
+    @Column({ type: 'jsonb', nullable: false })
+    configuration: AgentConfiguration;
+
     @Column({ type: 'boolean', default: true })
     isActive: boolean;
 
@@ -52,9 +47,6 @@ export class AgentEntity {
 
     @UpdateDateColumn()
     updatedAt: Date;
-
-    @OneToOne(() => AgentConfigEntity, agentConfiguration => agentConfiguration.agent, { cascade: true })
-    agentConfiguration: AgentConfigEntity;
 
     @OneToMany(() => PostEntity, post => post.agent, { cascade: true })
     posts: PostEntity[];

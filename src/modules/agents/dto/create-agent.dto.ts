@@ -1,5 +1,7 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { AgentStatus, AgentType } from '../enums/agent.enum';
+import { AgentConfiguration } from '../models/agent.model';
+import { Type } from 'class-transformer';
 
 export class CreateAgentDto {
     @IsString()
@@ -25,4 +27,9 @@ export class CreateAgentDto {
     @IsEnum(AgentType)
     @IsNotEmpty()
     type: AgentType;
+
+    @ValidateNested()
+    @Type(() => AgentConfiguration)
+    @IsNotEmpty()
+    configuration: AgentConfiguration;
 }
