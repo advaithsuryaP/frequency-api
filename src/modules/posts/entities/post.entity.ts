@@ -1,5 +1,5 @@
 import { AgentEntity } from 'src/modules/agents/entities/agent.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'posts' })
 export class PostEntity {
@@ -16,5 +16,6 @@ export class PostEntity {
     likes: number;
 
     @ManyToOne(() => AgentEntity, agent => agent.posts)
+    @JoinColumn()
     agent: AgentEntity;
 }

@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { AgentStatus, AgentType } from '../models/agent.model';
+import { AgentStatus, AgentType } from '../enums/agent.enum';
 
 export class CreateAgentDto {
     @IsString()

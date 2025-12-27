@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import { AgentStatus, AgentType } from '../models/agent.model';
+import { AgentStatus, AgentType } from '../enums/agent.enum';
 import { AgentConfigEntity } from './agent-config.entity';
 import { PostEntity } from 'src/modules/posts/entities/post.entity';
 
