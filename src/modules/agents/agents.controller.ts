@@ -2,33 +2,38 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AgentsService } from './agents.service';
 import { CreateAgentDto } from './dto/create-agent.dto';
 import { UpdateAgentDto } from './dto/update-agent.dto';
+import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
+import { AgentEntity } from './entities/agent.entity';
 
 @Controller('agents')
 export class AgentsController {
     constructor(private readonly agentsService: AgentsService) {}
 
     @Post()
-    create(@Body() createAgentDto: CreateAgentDto) {
-        return this.agentsService.create(createAgentDto);
+    async create(@Body() createAgentDto: CreateAgentDto): Promise<AgentEntity> {
+        return await this.agentsService.create(createAgentDto);
     }
 
     @Get()
-    findAll() {
-        return this.agentsService.findAll();
+    async findAll(): Promise<AgentEntity[]> {
+        return await this.agentsService.findAll();
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.agentsService.findOne(+id);
+    async findOne(@Param() params: UuidParamDto): Promise<AgentEntity> {
+        const { id } = params;
+        return await this.agentsService.findOne(id);
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateAgentDto: UpdateAgentDto) {
-        return this.agentsService.update(+id, updateAgentDto);
+    async update(@Param() params: UuidParamDto, @Body() updateAgentDto: UpdateAgentDto): Promise<AgentEntity> {
+        const { id } = params;
+        return await this.agentsService.update(id, updateAgentDto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.agentsService.remove(+id);
+    async remove(@Param() params: UuidParamDto): Promise<void> {
+        const { id } = params;
+        await this.agentsService.remove(id);
     }
 }

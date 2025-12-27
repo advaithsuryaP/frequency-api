@@ -35,6 +35,9 @@ export class AgentEntity {
     })
     type: AgentType;
 
+    @OneToOne(() => AgentConfigEntity, agentConfiguration => agentConfiguration.agent, { cascade: true })
+    agentConfiguration: AgentConfigEntity;
+
     @Column({ type: 'boolean', default: true })
     isActive: boolean;
 
