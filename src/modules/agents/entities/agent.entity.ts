@@ -42,12 +42,12 @@ export class AgentEntity {
     @Column({ type: 'boolean', default: true })
     isActive: boolean;
 
+    @OneToMany(() => PostEntity, post => post.agent, { cascade: true })
+    posts: PostEntity[];
+
     @CreateDateColumn()
     createdAt: Date;
 
     @UpdateDateColumn()
     updatedAt: Date;
-
-    @OneToMany(() => PostEntity, post => post.agent, { cascade: true })
-    posts: PostEntity[];
 }

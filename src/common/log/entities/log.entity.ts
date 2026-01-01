@@ -1,5 +1,14 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    PrimaryGeneratedColumn
+} from 'typeorm';
 import { EventModule, LogLevel } from '../enums/log.enum';
+import { UserEntity } from 'src/modules/users/entities/user.entity';
 
 @Entity({ name: 'logs' })
 export class LogEntity {
@@ -8,9 +17,6 @@ export class LogEntity {
 
     @Column({ nullable: false })
     message: string;
-
-    @Column({ nullable: true })
-    userId: string;
 
     @Column({
         type: 'enum',
@@ -27,6 +33,10 @@ export class LogEntity {
         default: EventModule.EXTERNAL
     })
     module: EventModule;
+
+    @ManyToOne(() => UserEntity, user => user.logs, { nullable: true })
+    @JoinColumn()
+    user: UserEntity;
 
     @CreateDateColumn()
     createdAt: Date;
