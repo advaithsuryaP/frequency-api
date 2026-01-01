@@ -9,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './config/database.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { HashingModule } from './common/hashing/hashing.module';
-import { LoggingModule } from './common/logging/logging.module';
+import { LogModule } from './common/log/log.module';
 
 @Module({
     imports: [
@@ -24,7 +24,7 @@ import { LoggingModule } from './common/logging/logging.module';
         }),
         AuthModule,
         HashingModule,
-        LoggingModule
+        LogModule
     ],
     controllers: [AppController],
     providers: [AppService]
