@@ -35,7 +35,10 @@ export class AuthService {
 
         const accessToken = await this.jwtService.signAsync(payload);
 
-        await this.logEventService.loginEvent(user.id, `${user.username} logged in to the system`);
+        await this.logEventService.loginEvent({
+            userId: user.id,
+            message: `${user.username} logged in to the system`
+        });
 
         const { hashedPassword, ...publicUser } = user;
         return {

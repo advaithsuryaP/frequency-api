@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateLogDto } from './dto/create-log.dto';
 import { LogEntity } from './entities/log.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateLogDto } from './dto/create-log.dto';
 
 @Injectable()
 export class LogService {
