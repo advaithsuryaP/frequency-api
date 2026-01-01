@@ -23,4 +23,10 @@ export class UserQueryService {
             displayName: user.displayName
         };
     }
+
+    async findUserById(id: string): Promise<UserEntity | null> {
+        const user = await this.userRepository.findOne({ where: { id } });
+        if (!user) return null;
+        return user;
+    }
 }
