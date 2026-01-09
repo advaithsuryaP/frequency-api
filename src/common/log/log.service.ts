@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UserQueryService } from 'src/modules/users/adapters/user-query/user-query.service';
 import { PaginationDto } from '../dto/pagination.dto';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/constants';
 
 @Injectable()
 export class LogService {
@@ -26,7 +27,7 @@ export class LogService {
     async findAll(paginationDto: PaginationDto): Promise<LogEntity[]> {
         return await this.logRepository.find({
             skip: paginationDto.skip,
-            take: paginationDto.limit
+            take: paginationDto.limit ?? DEFAULT_PAGE_SIZE
         });
     }
 
