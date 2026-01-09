@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { PublicUser } from './dto/public-user.interface';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('users')
 export class UsersController {
@@ -16,8 +17,8 @@ export class UsersController {
     }
 
     @Get()
-    async findAll(): Promise<UserEntity[]> {
-        return await this.usersService.findAll();
+    async findAll(@Query() paginationDto: PaginationDto): Promise<UserEntity[]> {
+        return await this.usersService.findAll(paginationDto);
     }
 
     @Get(':id')
