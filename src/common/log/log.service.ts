@@ -24,7 +24,10 @@ export class LogService {
     }
 
     async findAll(paginationDto: PaginationDto): Promise<LogEntity[]> {
-        return await this.logRepository.find();
+        return await this.logRepository.find({
+            skip: paginationDto.skip,
+            take: paginationDto.limit
+        });
     }
 
     async findOne(id: string): Promise<LogEntity> {
