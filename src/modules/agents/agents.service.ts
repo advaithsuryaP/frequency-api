@@ -4,6 +4,8 @@ import { UpdateAgentDto } from './dto/update-agent.dto';
 import { Repository } from 'typeorm';
 import { AgentEntity } from './entities/agent.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/constants';
 
 @Injectable()
 export class AgentsService {
@@ -13,8 +15,11 @@ export class AgentsService {
         return await this.agentRepository.save(createAgentDto);
     }
 
-    async findAll(): Promise<AgentEntity[]> {
-        return await this.agentRepository.find();
+    async findAll(paginationDto: PaginationDto): Promise<AgentEntity[]> {
+        return await this.agentRepository.find({
+            skip: paginationDto.skip,
+            take: paginationDto.limit ?? DEFAULT_PAGE_SIZE
+        });
     }
 
     async findOne(id: string): Promise<AgentEntity> {
