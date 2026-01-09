@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PostEntity } from './entities/post.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -15,8 +16,8 @@ export class PostsController {
     }
 
     @Get()
-    async findAll(): Promise<PostEntity[]> {
-        return await this.postsService.findAll();
+    async findAll(@Query() paginationDto: PaginationDto): Promise<PostEntity[]> {
+        return await this.postsService.findAll(paginationDto);
     }
 
     @Get(':id')
