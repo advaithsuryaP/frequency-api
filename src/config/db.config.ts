@@ -10,7 +10,7 @@ export const databaseConfig = (configService: ConfigService) => {
     return {
         url,
         type: 'postgres',
-        synchronize: true, // TODO: Remove in production
+        synchronize: true,
         autoLoadEntities: true,
         entities: [__dirname + '/../modules/**/*.entity{.ts}'],
         ssl: { rejectUnauthorized: false }

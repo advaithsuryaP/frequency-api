@@ -6,7 +6,7 @@ import { PostsModule } from './modules/posts/posts.module';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { databaseConfig } from './config/database.config';
+import { databaseConfig } from './config/db.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { HashingModule } from './common/hashing/hashing.module';
 import { LogModule } from './common/log/log.module';
