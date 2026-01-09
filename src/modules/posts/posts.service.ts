@@ -5,6 +5,8 @@ import { PostEntity } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AgentQueryService } from '../agents/adapters/agent-query/agent-query.service';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/constants';
 
 @Injectable()
 export class PostsService {
@@ -23,8 +25,11 @@ export class PostsService {
         return await this.postRepository.save(post);
     }
 
-    async findAll(): Promise<PostEntity[]> {
-        return await this.postRepository.find();
+    async findAll(paginationDto: PaginationDto): Promise<PostEntity[]> {
+        return await this.postRepository.find({
+            skip: paginationDto.skip,
+            take: paginationDto.limit ?? DEFAULT_PAGE_SIZE
+        });
     }
 
     async findOne(id: string): Promise<PostEntity> {
