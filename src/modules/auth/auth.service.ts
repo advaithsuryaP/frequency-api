@@ -41,4 +41,14 @@ export class AuthService {
             user: publicUser
         };
     }
+
+    async validateUser(username: string, password: string): Promise<{ id: string }> {
+        const user = await this.userQueryService.findUserByUsername(username);
+        if (!user) throw new UnauthorizedException('Invalid username or password');
+
+        const ok = await this.hashingService.compare(password, user.hashedPassword);
+        if (!ok) throw new UnauthorizedException('Invalid username or password');
+
+        return { id: user.id };
+    }
 }

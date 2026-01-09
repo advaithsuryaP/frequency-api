@@ -7,10 +7,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { jwtConfig } from 'src/config/jwt.config';
 import { LogModule } from 'src/common/log/log.module';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
     controllers: [AuthController],
-    providers: [AuthService],
+    providers: [AuthService, LocalStrategy],
     imports: [
         HashingModule,
         UsersModule,
