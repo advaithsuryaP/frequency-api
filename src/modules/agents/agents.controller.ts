@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { AgentsService } from './agents.service';
 import { CreateAgentDto } from './dto/create-agent.dto';
 import { UpdateAgentDto } from './dto/update-agent.dto';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { AgentEntity } from './entities/agent.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('agents')
 export class AgentsController {
@@ -15,8 +16,8 @@ export class AgentsController {
     }
 
     @Get()
-    async findAll(): Promise<AgentEntity[]> {
-        return await this.agentsService.findAll();
+    async findAll(@Query() paginationDto: PaginationDto): Promise<AgentEntity[]> {
+        return await this.agentsService.findAll(paginationDto);
     }
 
     @Get(':id')
