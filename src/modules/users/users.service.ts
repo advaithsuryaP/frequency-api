@@ -6,6 +6,8 @@ import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { PublicUser } from './dto/public-user.interface';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { DEFAULT_PAGE_SIZE } from 'src/utils/constants';
 
 @Injectable()
 export class UsersService {
@@ -29,8 +31,11 @@ export class UsersService {
         }
     }
 
-    async findAll(): Promise<UserEntity[]> {
-        return await this.userRepository.find();
+    async findAll(paginationDto: PaginationDto): Promise<UserEntity[]> {
+        return await this.userRepository.find({
+            skip: paginationDto.skip,
+            take: paginationDto.limit ?? DEFAULT_PAGE_SIZE
+        });
     }
 
     async findOne(id: string): Promise<UserEntity> {
