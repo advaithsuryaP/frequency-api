@@ -18,15 +18,10 @@ export class AuthService {
 
     async login(signInDto: SignInDto): Promise<SignInResponse> {
         const user = await this.userQueryService.findUserByUsername(signInDto.username);
-
-        if (!user) {
-            throw new UnauthorizedException('Invalid username or password');
-        }
+        if (!user) throw new UnauthorizedException('Invalid username or password');
 
         const ok = await this.hashingService.compare(signInDto.password, user.hashedPassword);
-        if (!ok) {
-            throw new UnauthorizedException('Invalid username or password');
-        }
+        if (!ok) throw new UnauthorizedException('Invalid username or password');
 
         const payload: JwtContract = {
             sub: user.id,
