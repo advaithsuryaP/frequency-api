@@ -1,15 +1,16 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { LogService } from './log.service';
 import { LogEntity } from './entities/log.entity';
 import { UuidParamDto } from '../dto/uuid-param.dto';
+import { PaginationDto } from '../dto/pagination.dto';
 
 @Controller('logs')
 export class LogController {
     constructor(private readonly logService: LogService) {}
 
     @Get()
-    async findAll(): Promise<LogEntity[]> {
-        return await this.logService.findAll();
+    async findAll(@Query() paginationDto: PaginationDto): Promise<LogEntity[]> {
+        return await this.logService.findAll(paginationDto);
     }
 
     @Get(':id')

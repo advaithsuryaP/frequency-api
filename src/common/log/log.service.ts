@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UserQueryService } from 'src/modules/users/adapters/user-query/user-query.service';
+import { PaginationDto } from '../dto/pagination.dto';
 
 @Injectable()
 export class LogService {
@@ -22,7 +23,7 @@ export class LogService {
         return await this.logRepository.save(newLog);
     }
 
-    async findAll(): Promise<LogEntity[]> {
+    async findAll(paginationDto: PaginationDto): Promise<LogEntity[]> {
         return await this.logRepository.find();
     }
 
