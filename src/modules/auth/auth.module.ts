@@ -13,16 +13,16 @@ import { LocalStrategy } from './strategies/local.strategy';
     controllers: [AuthController],
     providers: [AuthService, LocalStrategy],
     imports: [
-        HashingModule,
-        UsersModule,
         LogModule,
+        UsersModule,
+        HashingModule,
+        ConfigModule.forFeature(jwtConfig),
         JwtModule.registerAsync({
             global: true,
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => jwtConfig(configService)
-        }),
-        JwtModule
+        })
     ]
 })
 export class AuthModule {}

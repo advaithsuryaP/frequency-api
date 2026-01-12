@@ -1,5 +1,4 @@
 import { JwtService } from '@nestjs/jwt';
-import { SignInDto } from './dto/sign-in.dto';
 import { SignInResponse } from './dto/sign-in.response';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { HashingService } from 'src/common/hashing/hashing.service';
