@@ -22,7 +22,7 @@ export class AuthService {
 
     async login(user: PublicUser): Promise<SignInResponse> {
         const { accessToken, refreshToken } = await this._generateTokens(user.id);
-        const hashedRefreshToken = await this.hashingService.hashWithAargon(refreshToken);
+        const hashedRefreshToken = await this.hashingService.hash(refreshToken);
 
         await this.logEventService.loginEvent({
             userId: user.id,

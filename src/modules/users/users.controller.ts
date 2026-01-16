@@ -12,11 +12,13 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     async create(@Body() createUserDto: CreateUserDto): Promise<PublicUser> {
         return await this.usersService.create(createUserDto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll(@Query() paginationDto: PaginationDto): Promise<UserEntity[]> {
         return await this.usersService.findAll(paginationDto);
@@ -29,12 +31,14 @@ export class UsersController {
         return await this.usersService.findOne(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     async update(@Param() params: UuidParamDto, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
         const { id } = params;
         return await this.usersService.update(id, updateUserDto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async remove(@Param() params: UuidParamDto): Promise<void> {
         const { id } = params;
