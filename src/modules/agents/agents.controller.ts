@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { AgentsService } from './agents.service';
 import { CreateAgentDto } from './dto/create-agent.dto';
 import { UpdateAgentDto } from './dto/update-agent.dto';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { AgentEntity } from './entities/agent.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('agents')
 export class AgentsController {
     constructor(private readonly agentsService: AgentsService) {}

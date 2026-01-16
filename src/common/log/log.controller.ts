@@ -5,11 +5,11 @@ import { UuidParamDto } from '../dto/uuid-param.dto';
 import { PaginationDto } from '../dto/pagination.dto';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('logs')
 export class LogController {
     constructor(private readonly logService: LogService) {}
 
-    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll(@Query() paginationDto: PaginationDto): Promise<LogEntity[]> {
         return await this.logService.findAll(paginationDto);
