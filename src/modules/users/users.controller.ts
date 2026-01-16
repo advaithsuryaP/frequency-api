@@ -8,44 +8,39 @@ import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @UseGuards(JwtAuthGuard)
     @Post()
     async create(@Body() createUserDto: CreateUserDto): Promise<PublicUser> {
         return await this.usersService.create(createUserDto);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll(@Query() paginationDto: PaginationDto): Promise<UserEntity[]> {
         return await this.usersService.findAll(paginationDto);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async findOne(@Param() params: UuidParamDto): Promise<UserEntity> {
         const { id } = params;
         return await this.usersService.findOne(id);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     async update(@Param() params: UuidParamDto, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
         const { id } = params;
         return await this.usersService.update(id, updateUserDto);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async remove(@Param() params: UuidParamDto): Promise<void> {
         const { id } = params;
         await this.usersService.remove(id);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get('profile')
     async getProfile(@Req() request: Request): Promise<UserEntity> {
         const userId: string = request['user']['id'];
