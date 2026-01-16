@@ -28,7 +28,13 @@ export class UserQueryService {
     }
 
     private _mapToAuthUserContract(user: UserEntity): AuthUserContract {
-        const { password, refreshToken, ...publicUser } = user;
-        return { ...publicUser, hashedPassword: password, refreshToken };
+        return {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            displayName: user.displayName,
+            hashedPassword: user.password,
+            refreshToken: user.refreshToken
+        };
     }
 }

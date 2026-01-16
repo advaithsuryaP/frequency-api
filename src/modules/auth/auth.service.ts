@@ -75,6 +75,10 @@ export class AuthService {
         return ok;
     }
 
+    async logout(userId: string): Promise<boolean> {
+        return await this.userUpdateService.updateRefreshToken(userId, null);
+    }
+
     private async _generateTokens(userId: string): Promise<{ accessToken: string; refreshToken: string }> {
         const payload: JwtPayload = { sub: userId };
         const [accessToken, refreshToken] = await Promise.all([
