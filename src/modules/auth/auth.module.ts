@@ -6,9 +6,11 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LogModule } from 'src/common/log/log.module';
 import { LocalStrategy } from './strategies/local.strategy';
-import jwtConfig from 'src/config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+
+import jwtConfig from 'src/config/jwt.config';
+import rjwtConfig from 'src/config/rjwt.config';
 
 @Module({
     controllers: [AuthController],
@@ -18,6 +20,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         UsersModule,
         HashingModule,
         ConfigModule.forFeature(jwtConfig),
+        ConfigModule.forFeature(rjwtConfig),
         JwtModule.registerAsync(jwtConfig.asProvider())
     ]
 })

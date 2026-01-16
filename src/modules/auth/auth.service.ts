@@ -1,11 +1,13 @@
 import { JwtService } from '@nestjs/jwt';
 import { SignInResponse } from './dto/sign-in.response';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { UserQueryService } from '../users/adapters/user-query/user-query.service';
 import { LogEventService } from 'src/common/log/adapters/log-event/log-event.service';
 import { JwtPayload } from './types/jwt.payload';
 import { PublicUser } from '../users/dto/public-user.interface';
+import rjwtConfig from 'src/config/rjwt.config';
+import type { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -13,12 +15,15 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly hashingService: HashingService,
         private readonly logEventService: LogEventService,
-        private readonly userQueryService: UserQueryService
+        private readonly userQueryService: UserQueryService,
+        @Inject(rjwtConfig.KEY) private readonly rjwtConfiguration: ConfigType<typeof rjwtConfig>
     ) {}
 
     async login(user: PublicUser): Promise<SignInResponse> {
         const payload: JwtPayload = { sub: user.id };
         const accessToken = await this.jwtService.signAsync(payload);
+
+        const refreshToken = await this.jwtService.signAsync(payload, this.rjwtConfiguration);
 
         await this.logEventService.loginEvent({
             userId: user.id,
@@ -27,6 +32,7 @@ export class AuthService {
 
         return {
             accessToken,
+            refreshToken,
             user
         };
     }
