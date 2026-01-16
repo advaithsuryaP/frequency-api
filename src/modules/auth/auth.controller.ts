@@ -1,7 +1,10 @@
-import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
-import { SignInResponse } from './dto/sign-in.response';
+import { SignInResponse } from './types/sign-in.response';
+import { PublicUser } from '../users/dto/public-user.interface';
+import { RjwtAuthGuard } from './guards/rjwt-auth/rjwt-auth.guard';
+import { RefreshTokenResponse } from './types/refresh-token.response';
 
 @Controller('auth')
 export class AuthController {
@@ -10,7 +13,16 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Request() req): Promise<SignInResponse> {
-        return await this.authService.login(req.user);
+    async login(@Req() request: Request): Promise<SignInResponse> {
+        const user: PublicUser = request['user'];
+        return await this.authService.login(user);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(RjwtAuthGuard)
+    @Post('refresh-token')
+    async refreshToken(@Req() request: Request): Promise<RefreshTokenResponse> {
+        const userId: string = request['user']['id'];
+        return this.authService.refreshToken(userId);
     }
 }

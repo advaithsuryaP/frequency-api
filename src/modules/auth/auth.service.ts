@@ -1,5 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
-import { SignInResponse } from './dto/sign-in.response';
+import { SignInResponse } from './types/sign-in.response';
+import { RefreshTokenResponse } from './types/refresh-token.response';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { UserQueryService } from '../users/adapters/user-query/user-query.service';
@@ -47,5 +48,12 @@ export class AuthService {
         const { hashedPassword, ...publicUser } = user;
 
         return publicUser;
+    }
+
+    async refreshToken(userId: string): Promise<RefreshTokenResponse> {
+        const payload: JwtPayload = { sub: userId };
+        const accessToken = await this.jwtService.signAsync(payload);
+
+        return { accessToken };
     }
 }
