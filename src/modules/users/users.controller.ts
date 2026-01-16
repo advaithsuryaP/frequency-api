@@ -7,6 +7,7 @@ import { PublicUser } from './dto/public-user.interface';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
+import type { Request } from 'express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -43,7 +44,7 @@ export class UsersController {
 
     @Get('profile')
     async getProfile(@Req() request: Request): Promise<UserEntity> {
-        const userId: string = request['user']['id'];
+        const userId: string = (request.user as PublicUser).id;
         return await this.usersService.findOne(userId);
     }
 }

@@ -5,6 +5,7 @@ import { SignInResponse } from './types/sign-in.response';
 import { PublicUser } from '../users/dto/public-user.interface';
 import { RjwtAuthGuard } from './guards/rjwt-auth/rjwt-auth.guard';
 import { RefreshTokenResponse } from './types/refresh-token.response';
+import type { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +15,7 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Req() request: Request): Promise<SignInResponse> {
-        const user: PublicUser = request['user'];
+        const user: PublicUser = request.user as PublicUser;
         return await this.authService.login(user);
     }
 
@@ -22,7 +23,7 @@ export class AuthController {
     @UseGuards(RjwtAuthGuard)
     @Post('refresh-token')
     async refreshToken(@Req() request: Request): Promise<RefreshTokenResponse> {
-        const userId: string = request['user']['id'];
+        const userId: string = (request.user as PublicUser).id;
         return this.authService.refreshToken(userId);
     }
 }

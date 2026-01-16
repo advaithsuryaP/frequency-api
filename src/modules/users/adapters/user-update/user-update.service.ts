@@ -7,11 +7,8 @@ import { Repository } from 'typeorm';
 export class UserUpdateService {
     constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
-    async updateRefreshToken(id: string, refreshToken: string): Promise<string | null> {
-        const user = await this.userRepository.findOne({ where: { id } });
-        if (!user) return null;
-        user.refreshToken = refreshToken;
-        await this.userRepository.save(user);
-        return user.refreshToken;
+    async updateRefreshToken(id: string, refreshToken: string): Promise<boolean> {
+        const updated = await this.userRepository.update(id, { refreshToken });
+        return !!updated.affected && updated.affected > 0;
     }
 }

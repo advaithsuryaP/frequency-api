@@ -7,7 +7,7 @@ export class HashingService {
         return await aargon.hash(data);
     }
 
-    async compare(data: string, hashedData: string): Promise<boolean> {
+    async verify(data: string, hashedData: string): Promise<boolean> {
         return await aargon.verify(hashedData, data);
     }
 }
