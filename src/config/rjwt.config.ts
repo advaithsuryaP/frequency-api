@@ -5,6 +5,6 @@ export default registerAs(
     'rjwt',
     (): JwtSignOptions => ({
         secret: process.env.RJWT_SECRET,
-        expiresIn: '7d'
+        expiresIn: Number(process.env.RJWT_EXPIRES_IN) ?? '7d'
     })
 );
