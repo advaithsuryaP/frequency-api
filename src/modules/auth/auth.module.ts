@@ -11,10 +11,11 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
 import jwtConfig from 'src/config/jwt.config';
 import rjwtConfig from 'src/config/rjwt.config';
+import { RjwtStrategy } from './strategies/rjwt.strategy';
 
 @Module({
     controllers: [AuthController],
-    providers: [AuthService, LocalStrategy, JwtStrategy],
+    providers: [AuthService, LocalStrategy, JwtStrategy, RjwtStrategy],
     imports: [
         LogModule,
         UsersModule,
