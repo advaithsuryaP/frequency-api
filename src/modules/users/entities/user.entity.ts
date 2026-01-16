@@ -18,6 +18,9 @@ export class UserEntity {
     @Column({ unique: true })
     email: string;
 
+    @Column({ nullable: true })
+    refreshToken: string;
+
     @OneToMany(() => LogEntity, log => log.user, { cascade: true })
     logs: LogEntity[];
 

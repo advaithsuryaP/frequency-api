@@ -21,10 +21,8 @@ export class AuthService {
     ) {}
 
     async login(user: PublicUser): Promise<SignInResponse> {
-        const payload: JwtPayload = { sub: user.id };
-        const accessToken = await this.jwtService.signAsync(payload);
-
-        const refreshToken = await this.jwtService.signAsync(payload, this.rjwtConfiguration);
+        const { accessToken, refreshToken } = await this._generateTokens(user.id);
+        const hashedRefreshToken = await this.hashingService.hashWithAargon(refreshToken);
 
         await this.logEventService.loginEvent({
             userId: user.id,
@@ -55,5 +53,14 @@ export class AuthService {
         const accessToken = await this.jwtService.signAsync(payload);
 
         return { accessToken };
+    }
+
+    private async _generateTokens(userId: string): Promise<{ accessToken: string; refreshToken: string }> {
+        const payload: JwtPayload = { sub: userId };
+        const [accessToken, refreshToken] = await Promise.all([
+            this.jwtService.signAsync(payload),
+            this.jwtService.signAsync(payload, this.rjwtConfiguration)
+        ]);
+        return { accessToken, refreshToken };
     }
 }
