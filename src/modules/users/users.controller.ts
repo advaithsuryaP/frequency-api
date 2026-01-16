@@ -24,9 +24,9 @@ export class UsersController {
 
     @UseGuards(JwtAuthGuard)
     @Get(':id')
-    async findOne(@Req() request: Request): Promise<UserEntity> {
-        const userId: string = request['user']['id'];
-        return await this.usersService.findOne(userId);
+    async findOne(@Param() params: UuidParamDto): Promise<UserEntity> {
+        const { id } = params;
+        return await this.usersService.findOne(id);
     }
 
     @Patch(':id')
@@ -39,5 +39,12 @@ export class UsersController {
     async remove(@Param() params: UuidParamDto): Promise<void> {
         const { id } = params;
         await this.usersService.remove(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('profile')
+    async getProfile(@Req() request: Request): Promise<UserEntity> {
+        const userId: string = request['user']['id'];
+        return await this.usersService.findOne(userId);
     }
 }
