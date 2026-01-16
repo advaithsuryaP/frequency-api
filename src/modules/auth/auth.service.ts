@@ -1,6 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
 import { SignInResponse } from './types/sign-in.response';
-import { RefreshTokenResponse } from './types/refresh-token.response';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { UserQueryService } from '../users/adapters/user-query/user-query.service';
@@ -10,7 +9,8 @@ import { PublicUser } from '../users/dto/public-user.interface';
 import rjwtConfig from 'src/config/rjwt.config';
 import type { ConfigType } from '@nestjs/config';
 import { UserUpdateService } from '../users/adapters/user-update/user-update.service';
-import { UserEntity } from '../users/entities/user.entity';
+import { AuthUserContract } from '../users/adapters/contracts/auth-user.contract';
+import { RefreshTokenResponse } from './types/refresh-token.response';
 
 @Injectable()
 export class AuthService {
@@ -42,26 +42,31 @@ export class AuthService {
     }
 
     async validateUser(username: string, password: string): Promise<PublicUser> {
-        const user = await this.userQueryService.findUserByUsername(username);
+        const user: AuthUserContract | null = await this.userQueryService.findUserByUsername(username);
         if (!user) throw new UnauthorizedException('Invalid username or password');
 
         const ok = await this.hashingService.verify(password, user.hashedPassword);
         if (!ok) throw new UnauthorizedException('Invalid username or password');
 
-        const { hashedPassword, ...publicUser } = user;
+        const { hashedPassword, refreshToken, ...publicUser } = user;
 
         return publicUser;
     }
 
     async refreshToken(userId: string): Promise<RefreshTokenResponse> {
-        const payload: JwtPayload = { sub: userId };
-        const accessToken = await this.jwtService.signAsync(payload);
+        const { accessToken, refreshToken } = await this._generateTokens(userId);
 
-        return { accessToken };
+        const hashedRefreshToken = await this.hashingService.hash(refreshToken);
+        await this.userUpdateService.updateRefreshToken(userId, hashedRefreshToken);
+
+        return {
+            accessToken,
+            refreshToken
+        };
     }
 
     async validateRefreshToken(userId: string, refreshToken: string): Promise<boolean> {
-        const user: UserEntity | null = await this.userQueryService.findUserById(userId);
+        const user: AuthUserContract | null = await this.userQueryService.findUserById(userId);
         if (!user || !user.refreshToken) throw new UnauthorizedException('Invalid refresh token');
 
         const ok = await this.hashingService.verify(refreshToken, user.refreshToken);

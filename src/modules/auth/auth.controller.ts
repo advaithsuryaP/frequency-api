@@ -4,8 +4,8 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { SignInResponse } from './types/sign-in.response';
 import { PublicUser } from '../users/dto/public-user.interface';
 import { RjwtAuthGuard } from './guards/rjwt-auth/rjwt-auth.guard';
-import { RefreshTokenResponse } from './types/refresh-token.response';
 import type { Request } from 'express';
+import { RefreshTokenResponse } from './types/refresh-token.response';
 
 @Controller('auth')
 export class AuthController {
@@ -23,7 +23,7 @@ export class AuthController {
     @UseGuards(RjwtAuthGuard)
     @Post('refresh-token')
     async refreshToken(@Req() request: Request): Promise<RefreshTokenResponse> {
-        const userId: string = (request.user as PublicUser).id;
-        return this.authService.refreshToken(userId);
+        const userId = (request.user as PublicUser).id;
+        return await this.authService.refreshToken(userId);
     }
 }
