@@ -11,7 +11,7 @@ export class UserQueryService {
     async findUserByUsername(username: string): Promise<AuthUserContract | null> {
         const user: UserEntity | null = await this.userRepository.findOne({
             where: { username },
-            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken', 'role']
+            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken', 'role', 'createdAt', 'updatedAt']
         });
         if (!user) return null;
 
@@ -21,7 +21,7 @@ export class UserQueryService {
     async findUserById(id: string): Promise<AuthUserContract | null> {
         const user: UserEntity | null = await this.userRepository.findOne({
             where: { id },
-            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken', 'role']
+            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken', 'role', 'createdAt', 'updatedAt']
         });
         if (!user) return null;
         return this._mapToAuthUserContract(user);
@@ -33,6 +33,8 @@ export class UserQueryService {
             role: user.role,
             email: user.email,
             username: user.username,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
             displayName: user.displayName,
             hashedPassword: user.password,
             refreshToken: user.refreshToken

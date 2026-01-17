@@ -8,6 +8,8 @@ export const toPublicUser = (user: AuthUserContract | UserEntity): PublicUser =>
         role: user.role,
         email: user.email,
         username: user.username,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
         displayName: user.displayName,
     };
 };
