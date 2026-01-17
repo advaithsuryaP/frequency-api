@@ -1,11 +1,11 @@
 import { Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
-import { SignInResponse } from './types/sign-in.response';
+import { SignInResponse } from './interfaces/sign-in.response';
 import { PublicUser } from '../users/dto/public-user.interface';
 import { RjwtAuthGuard } from './guards/rjwt-auth/rjwt-auth.guard';
 import type { Request } from 'express';
-import { RefreshTokenResponse } from './types/refresh-token.response';
+import { RefreshTokenResponse } from './interfaces/refresh-token.response';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')

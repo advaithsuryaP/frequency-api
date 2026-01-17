@@ -1,16 +1,16 @@
 import { JwtService } from '@nestjs/jwt';
-import { SignInResponse } from './types/sign-in.response';
+import { SignInResponse } from './interfaces/sign-in.response';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { HashingService } from 'src/common/hashing/hashing.service';
 import { UserQueryService } from '../users/adapters/user-query/user-query.service';
 import { LogEventService } from 'src/common/log/adapters/log-event/log-event.service';
-import { JwtPayload } from './types/jwt.payload';
+import { JwtPayload } from './interfaces/jwt.payload';
 import { PublicUser } from '../users/dto/public-user.interface';
 import rjwtConfig from 'src/config/rjwt.config';
 import type { ConfigType } from '@nestjs/config';
 import { UserUpdateService } from '../users/adapters/user-update/user-update.service';
 import { AuthUserContract } from '../users/adapters/contracts/auth-user.contract';
-import { RefreshTokenResponse } from './types/refresh-token.response';
+import { RefreshTokenResponse } from './interfaces/refresh-token.response';
 
 @Injectable()
 export class AuthService {
