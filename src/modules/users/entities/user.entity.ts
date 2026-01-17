@@ -1,4 +1,5 @@
 import { LogEntity } from 'src/common/log/entities/log.entity';
+import { RoleEnum } from 'src/modules/auth/enum/role.enum';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -20,6 +21,9 @@ export class UserEntity {
 
     @Column({ type: 'text', nullable: true })
     refreshToken: string | null;
+
+    @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })
+    role: RoleEnum;
 
     @OneToMany(() => LogEntity, log => log.user, { cascade: true })
     logs: LogEntity[];

@@ -8,6 +8,8 @@ import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import type { Request } from 'express';
+import { RoleEnum } from '../auth/enum/role.enum';
+import { Roles } from '../auth/decorators/roles.decorators';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -36,6 +38,7 @@ export class UsersController {
         return await this.usersService.update(id, updateUserDto);
     }
 
+    @Roles(RoleEnum.ADMIN)
     @Delete(':id')
     async remove(@Param() params: UuidParamDto): Promise<void> {
         const { id } = params;
