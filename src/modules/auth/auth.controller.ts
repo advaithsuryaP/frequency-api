@@ -7,11 +7,13 @@ import { RjwtAuthGuard } from './guards/rjwt-auth/rjwt-auth.guard';
 import type { Request } from 'express';
 import { RefreshTokenResponse } from './interfaces/refresh-token.response';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
+    @Public()
     @HttpCode(HttpStatus.OK)
     @UseGuards(LocalAuthGuard)
     @Post('login')
