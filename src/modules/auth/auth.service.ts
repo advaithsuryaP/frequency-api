@@ -11,6 +11,7 @@ import type { ConfigType } from '@nestjs/config';
 import { UserUpdateService } from '../users/adapters/user-update/user-update.service';
 import { AuthUserContract } from '../users/adapters/contracts/auth-user.contract';
 import { RefreshTokenResponse } from './interfaces/refresh-token.response';
+import { toPublicUser } from '../users/utils/users.utils';
 
 @Injectable()
 export class AuthService {
@@ -48,13 +49,13 @@ export class AuthService {
         const ok = await this.hashingService.verify(password, user.hashedPassword);
         if (!ok) throw new UnauthorizedException('Invalid username or password');
 
-        return this._mapToPublicUser(user);
+        return toPublicUser(user);
     }
 
     async getUserById(id: string): Promise<PublicUser> {
         const user: AuthUserContract | null = await this.userQueryService.findUserById(id);
         if (!user) throw new UnauthorizedException('User not found');
-        return this._mapToPublicUser(user);
+        return toPublicUser(user);
     }
 
     async refreshToken(userId: string): Promise<RefreshTokenResponse> {
@@ -76,7 +77,7 @@ export class AuthService {
         const ok: boolean = await this.hashingService.verify(refreshToken, user.refreshToken);
         if (!ok) throw new UnauthorizedException('Invalid refresh token');
 
-        return this._mapToPublicUser(user);
+        return toPublicUser(user);
     }
 
     async logout(userId: string): Promise<boolean> {
@@ -90,15 +91,5 @@ export class AuthService {
             this.jwtService.signAsync(payload, this.rjwtConfiguration)
         ]);
         return { accessToken, refreshToken };
-    }
-
-    private _mapToPublicUser(user: AuthUserContract): PublicUser {
-        return {
-            id: user.id,
-            role: user.role,
-            email: user.email,
-            username: user.username,
-            displayName: user.displayName,
-        };
     }
 }

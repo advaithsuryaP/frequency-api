@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Re
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
 import { PublicUser } from './interfaces/public-user.interface';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
@@ -10,6 +9,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import type { Request } from 'express';
 import { RoleEnum } from '../auth/enum/role.enum';
 import { Roles } from '../auth/decorators/roles.decorators';
+import { RoleAuthGuard } from '../auth/guards/role-auth/role-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -22,29 +22,30 @@ export class UsersController {
     }
 
     @Get()
-    async findAll(@Query() paginationDto: PaginationDto): Promise<UserEntity[]> {
+    async findAll(@Query() paginationDto: PaginationDto): Promise<PublicUser[]> {
         return await this.usersService.findAll(paginationDto);
     }
 
     @Get('profile')
-    async getProfile(@Req() request: Request): Promise<UserEntity> {
+    async getProfile(@Req() request: Request): Promise<PublicUser> {
         const userId: string = (request.user as PublicUser).id;
         return await this.usersService.findOne(userId);
     }
 
     @Get(':id')
-    async findOne(@Param() params: UuidParamDto): Promise<UserEntity> {
+    async findOne(@Param() params: UuidParamDto): Promise<PublicUser> {
         const { id } = params;
         return await this.usersService.findOne(id);
     }
 
     @Patch(':id')
-    async update(@Param() params: UuidParamDto, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    async update(@Param() params: UuidParamDto, @Body() updateUserDto: UpdateUserDto): Promise<PublicUser> {
         const { id } = params;
         return await this.usersService.update(id, updateUserDto);
     }
 
     @Roles(RoleEnum.ADMIN)
+    @UseGuards(RoleAuthGuard)
     @Delete(':id')
     async remove(@Param() params: UuidParamDto): Promise<void> {
         const { id } = params;

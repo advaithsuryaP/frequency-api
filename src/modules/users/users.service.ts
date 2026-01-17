@@ -8,6 +8,7 @@ import { HashingService } from 'src/common/hashing/hashing.service';
 import { PublicUser } from './interfaces/public-user.interface';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { DEFAULT_PAGE_SIZE } from 'src/utils/constants';
+import { toPublicUser } from './utils/users.utils';
 
 @Injectable()
 export class UsersService {
@@ -21,8 +22,7 @@ export class UsersService {
         const user = this.userRepository.create({ ...createUserDto, password: hashedPassword });
         try {
             const savedUser: UserEntity = await this.userRepository.save(user);
-            const { password, ...publicUser } = savedUser;
-            return publicUser;
+            return toPublicUser(savedUser);
         } catch (error) {
             if (error?.code === '23505') {
                 throw new ConflictException('Username or email already exists');
@@ -31,23 +31,24 @@ export class UsersService {
         }
     }
 
-    async findAll(paginationDto: PaginationDto): Promise<UserEntity[]> {
-        return await this.userRepository.find({
+    async findAll(paginationDto: PaginationDto): Promise<PublicUser[]> {
+        const users: UserEntity[] = await this.userRepository.find({
             skip: paginationDto.skip,
             take: paginationDto.limit ?? DEFAULT_PAGE_SIZE
         });
+        return users.map(user => toPublicUser(user));
     }
 
-    async findOne(id: string): Promise<UserEntity> {
-        const user = await this.userRepository.findOne({ where: { id } });
+    async findOne(id: string): Promise<PublicUser> {
+        const user: UserEntity | null = await this.userRepository.findOne({ where: { id } });
         if (!user) {
             throw new NotFoundException('User not found');
         }
-        return user;
+        return toPublicUser(user);
     }
 
     async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
-        const user = await this.findOne(id);
+        const user: UserEntity | null = await this.userRepository.findOne({ where: { id } });
         if (!user) {
             throw new NotFoundException('User not found');
         }
@@ -55,7 +56,7 @@ export class UsersService {
     }
 
     async remove(id: string): Promise<void> {
-        const user = await this.findOne(id);
+        const user: UserEntity | null = await this.userRepository.findOne({ where: { id } });
         if (!user) {
             throw new NotFoundException('User not found');
         }
