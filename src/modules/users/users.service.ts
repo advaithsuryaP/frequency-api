@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HashingService } from 'src/common/hashing/hashing.service';
-import { PublicUser } from './dto/public-user.interface';
+import { PublicUser } from './interfaces/public-user.interface';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { DEFAULT_PAGE_SIZE } from 'src/utils/constants';
 
@@ -14,7 +14,7 @@ export class UsersService {
     constructor(
         private readonly hashingService: HashingService,
         @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>
-    ) {}
+    ) { }
 
     async create(createUserDto: CreateUserDto): Promise<PublicUser> {
         const hashedPassword = await this.hashingService.hash(createUserDto.password);

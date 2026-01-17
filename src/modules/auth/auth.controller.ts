@@ -2,7 +2,7 @@ import { Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { SignInResponse } from './interfaces/sign-in.response';
-import { PublicUser } from '../users/dto/public-user.interface';
+import { PublicUser } from '../users/interfaces/public-user.interface';
 import { RjwtAuthGuard } from './guards/rjwt-auth/rjwt-auth.guard';
 import type { Request } from 'express';
 import { RefreshTokenResponse } from './interfaces/refresh-token.response';
@@ -10,7 +10,7 @@ import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService) { }
 
     @HttpCode(HttpStatus.OK)
     @UseGuards(LocalAuthGuard)
@@ -24,6 +24,7 @@ export class AuthController {
     @UseGuards(RjwtAuthGuard)
     @Post('refresh-token')
     async refreshToken(@Req() request: Request): Promise<RefreshTokenResponse> {
+        console.log(request.user);
         const userId = (request.user as PublicUser).id;
         return await this.authService.refreshToken(userId);
     }

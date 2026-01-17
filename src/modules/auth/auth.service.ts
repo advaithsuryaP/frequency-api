@@ -5,7 +5,7 @@ import { HashingService } from 'src/common/hashing/hashing.service';
 import { UserQueryService } from '../users/adapters/user-query/user-query.service';
 import { LogEventService } from 'src/common/log/adapters/log-event/log-event.service';
 import { JwtPayload } from './interfaces/jwt.payload';
-import { PublicUser } from '../users/dto/public-user.interface';
+import { PublicUser } from '../users/interfaces/public-user.interface';
 import rjwtConfig from 'src/config/rjwt.config';
 import type { ConfigType } from '@nestjs/config';
 import { UserUpdateService } from '../users/adapters/user-update/user-update.service';
@@ -21,7 +21,7 @@ export class AuthService {
         private readonly userQueryService: UserQueryService,
         private readonly userUpdateService: UserUpdateService,
         @Inject(rjwtConfig.KEY) private readonly rjwtConfiguration: ConfigType<typeof rjwtConfig>
-    ) {}
+    ) { }
 
     async login(user: PublicUser): Promise<SignInResponse> {
         const { accessToken, refreshToken } = await this._generateTokens(user.id);
@@ -48,9 +48,7 @@ export class AuthService {
         const ok = await this.hashingService.verify(password, user.hashedPassword);
         if (!ok) throw new UnauthorizedException('Invalid username or password');
 
-        const { hashedPassword, refreshToken, ...publicUser } = user;
-
-        return publicUser;
+        return this._mapToPublicUser(user);
     }
 
     async refreshToken(userId: string): Promise<RefreshTokenResponse> {
@@ -65,14 +63,14 @@ export class AuthService {
         };
     }
 
-    async validateRefreshToken(userId: string, refreshToken: string): Promise<boolean> {
+    async validateRefreshToken(userId: string, refreshToken: string): Promise<PublicUser> {
         const user: AuthUserContract | null = await this.userQueryService.findUserById(userId);
         if (!user || !user.refreshToken) throw new UnauthorizedException('Invalid refresh token');
 
-        const ok = await this.hashingService.verify(refreshToken, user.refreshToken);
+        const ok: boolean = await this.hashingService.verify(refreshToken, user.refreshToken);
         if (!ok) throw new UnauthorizedException('Invalid refresh token');
 
-        return ok;
+        return this._mapToPublicUser(user);
     }
 
     async logout(userId: string): Promise<boolean> {
@@ -86,5 +84,15 @@ export class AuthService {
             this.jwtService.signAsync(payload, this.rjwtConfiguration)
         ]);
         return { accessToken, refreshToken };
+    }
+
+    private _mapToPublicUser(user: AuthUserContract): PublicUser {
+        return {
+            id: user.id,
+            role: user.role,
+            email: user.email,
+            username: user.username,
+            displayName: user.displayName,
+        };
     }
 }

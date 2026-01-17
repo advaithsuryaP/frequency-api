@@ -19,7 +19,7 @@ export class UserEntity {
     @Column({ unique: true })
     email: string;
 
-    @Column({ type: 'text', nullable: true })
+    @Column({ type: 'text', nullable: true, select: false })
     refreshToken: string | null;
 
     @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })

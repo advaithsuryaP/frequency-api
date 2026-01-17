@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { PublicUser } from './dto/public-user.interface';
+import { PublicUser } from './interfaces/public-user.interface';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
@@ -14,7 +14,7 @@ import { Roles } from '../auth/decorators/roles.decorators';
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) {}
+    constructor(private readonly usersService: UsersService) { }
 
     @Post()
     async create(@Body() createUserDto: CreateUserDto): Promise<PublicUser> {
@@ -24,6 +24,13 @@ export class UsersController {
     @Get()
     async findAll(@Query() paginationDto: PaginationDto): Promise<UserEntity[]> {
         return await this.usersService.findAll(paginationDto);
+    }
+
+    @Get('profile')
+    async getProfile(@Req() request: Request): Promise<UserEntity> {
+        console.log(request.user);
+        const userId: string = (request.user as PublicUser).id;
+        return await this.usersService.findOne(userId);
     }
 
     @Get(':id')
@@ -45,9 +52,4 @@ export class UsersController {
         await this.usersService.remove(id);
     }
 
-    @Get('profile')
-    async getProfile(@Req() request: Request): Promise<UserEntity> {
-        const userId: string = (request.user as PublicUser).id;
-        return await this.usersService.findOne(userId);
-    }
 }

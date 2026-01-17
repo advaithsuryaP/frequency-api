@@ -6,12 +6,12 @@ import { AuthUserContract } from '../contracts/auth-user.contract';
 
 @Injectable()
 export class UserQueryService {
-    constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+    constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) { }
 
     async findUserByUsername(username: string): Promise<AuthUserContract | null> {
         const user: UserEntity | null = await this.userRepository.findOne({
             where: { username },
-            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken']
+            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken', 'role']
         });
         if (!user) return null;
 
@@ -21,7 +21,7 @@ export class UserQueryService {
     async findUserById(id: string): Promise<AuthUserContract | null> {
         const user: UserEntity | null = await this.userRepository.findOne({
             where: { id },
-            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken']
+            select: ['id', 'username', 'displayName', 'email', 'password', 'refreshToken', 'role']
         });
         if (!user) return null;
         return this._mapToAuthUserContract(user);
@@ -30,6 +30,7 @@ export class UserQueryService {
     private _mapToAuthUserContract(user: UserEntity): AuthUserContract {
         return {
             id: user.id,
+            role: user.role,
             email: user.email,
             username: user.username,
             displayName: user.displayName,

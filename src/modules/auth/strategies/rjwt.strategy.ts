@@ -6,6 +6,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { Request } from 'express';
 import { AuthService } from '../auth.service';
+import { PublicUser } from 'src/modules/users/interfaces/public-user.interface';
 
 @Injectable()
 export class RjwtStrategy extends PassportStrategy(Strategy, 'rjwt') {
@@ -21,14 +22,12 @@ export class RjwtStrategy extends PassportStrategy(Strategy, 'rjwt') {
         });
     }
 
-    async validate(req: Request, payload: JwtPayload): Promise<{ id: string }> {
+    async validate(req: Request, payload: JwtPayload): Promise<PublicUser> {
         const refreshToken = req.get('Authorization')?.replace('Bearer', '').trim();
         if (!refreshToken) throw new UnauthorizedException('Invalid refresh token');
 
         const userId: string = payload.sub;
-        const ok = await this.authService.validateRefreshToken(userId, refreshToken);
-        if (!ok) throw new UnauthorizedException('Invalid refresh token');
-
-        return { id: userId };
+        const user: PublicUser = await this.authService.validateRefreshToken(userId, refreshToken);
+        return user;
     }
 }

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserUpdateService {
-    constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+    constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) { }
 
     async updateRefreshToken(id: string, refreshToken: string | null): Promise<boolean> {
         const updated = await this.userRepository.update(id, { refreshToken });
