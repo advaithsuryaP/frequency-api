@@ -6,7 +6,6 @@ import { PublicUser } from '../users/interfaces/public-user.interface';
 import { RjwtAuthGuard } from './guards/rjwt-auth/rjwt-auth.guard';
 import type { Request } from 'express';
 import { RefreshTokenResponse } from './interfaces/refresh-token.response';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
@@ -31,7 +30,6 @@ export class AuthController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @UseGuards(JwtAuthGuard)
     @Post('logout')
     async logout(@Req() request: Request): Promise<boolean> {
         const userId = (request.user as PublicUser).id;

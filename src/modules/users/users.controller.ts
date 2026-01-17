@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,7 +8,6 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import type { Request } from 'express';
 import { RoleEnum } from '../auth/enum/role.enum';
 import { Roles } from '../auth/decorators/roles.decorators';
-import { RoleAuthGuard } from '../auth/guards/role-auth/role-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -43,7 +42,6 @@ export class UsersController {
     }
 
     @Roles(RoleEnum.ADMIN)
-    @UseGuards(RoleAuthGuard)
     @Delete(':id')
     async remove(@Param() params: UuidParamDto): Promise<void> {
         const { id } = params;
