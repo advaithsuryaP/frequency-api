@@ -51,6 +51,12 @@ export class AuthService {
         return this._mapToPublicUser(user);
     }
 
+    async getUserById(id: string): Promise<PublicUser> {
+        const user: AuthUserContract | null = await this.userQueryService.findUserById(id);
+        if (!user) throw new UnauthorizedException('User not found');
+        return this._mapToPublicUser(user);
+    }
+
     async refreshToken(userId: string): Promise<RefreshTokenResponse> {
         const { accessToken, refreshToken } = await this._generateTokens(userId);
 

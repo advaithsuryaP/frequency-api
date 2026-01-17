@@ -20,7 +20,7 @@ export class UsersService {
         const hashedPassword = await this.hashingService.hash(createUserDto.password);
         const user = this.userRepository.create({ ...createUserDto, password: hashedPassword });
         try {
-            const savedUser = await this.userRepository.save(user);
+            const savedUser: UserEntity = await this.userRepository.save(user);
             const { password, ...publicUser } = savedUser;
             return publicUser;
         } catch (error) {

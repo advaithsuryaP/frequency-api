@@ -24,7 +24,6 @@ export class AuthController {
     @UseGuards(RjwtAuthGuard)
     @Post('refresh-token')
     async refreshToken(@Req() request: Request): Promise<RefreshTokenResponse> {
-        console.log(request.user);
         const userId = (request.user as PublicUser).id;
         return await this.authService.refreshToken(userId);
     }

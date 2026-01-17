@@ -28,7 +28,6 @@ export class UsersController {
 
     @Get('profile')
     async getProfile(@Req() request: Request): Promise<UserEntity> {
-        console.log(request.user);
         const userId: string = (request.user as PublicUser).id;
         return await this.usersService.findOne(userId);
     }
