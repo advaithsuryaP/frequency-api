@@ -1,16 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PostEntity } from './entities/post.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 
-@UseGuards(JwtAuthGuard)
 @Controller('posts')
 export class PostsController {
-    constructor(private readonly postsService: PostsService) {}
+    constructor(private readonly postsService: PostsService) { }
 
     @Post()
     async create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
