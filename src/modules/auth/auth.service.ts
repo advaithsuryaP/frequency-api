@@ -52,7 +52,7 @@ export class AuthService {
         return toPublicUser(user);
     }
 
-    async getUserById(id: string): Promise<PublicUser> {
+    async validateJWT(id: string): Promise<PublicUser> {
         const user: AuthUserContract | null = await this.userQueryService.findUserById(id);
         if (!user) throw new UnauthorizedException('User not found');
         return toPublicUser(user);
