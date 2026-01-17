@@ -1,14 +1,12 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { LogService } from './log.service';
 import { LogEntity } from './entities/log.entity';
 import { UuidParamDto } from '../dto/uuid-param.dto';
 import { PaginationDto } from '../dto/pagination.dto';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth/jwt-auth.guard';
 
-@UseGuards(JwtAuthGuard)
 @Controller('logs')
 export class LogController {
-    constructor(private readonly logService: LogService) {}
+    constructor(private readonly logService: LogService) { }
 
     @Get()
     async findAll(@Query() paginationDto: PaginationDto): Promise<LogEntity[]> {
