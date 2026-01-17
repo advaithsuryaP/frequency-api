@@ -12,10 +12,22 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import jwtConfig from 'src/config/jwt.config';
 import rjwtConfig from 'src/config/rjwt.config';
 import { RjwtStrategy } from './strategies/rjwt.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { RoleAuthGuard } from './guards/role-auth/role-auth.guard';
 
 @Module({
     controllers: [AuthController],
-    providers: [AuthService, LocalStrategy, JwtStrategy, RjwtStrategy],
+    providers: [AuthService, LocalStrategy, JwtStrategy, RjwtStrategy,
+        {
+            provide: APP_GUARD,
+            useClass: JwtAuthGuard
+        },
+        {
+            provide: APP_GUARD,
+            useClass: RoleAuthGuard
+        }
+    ],
     imports: [
         LogModule,
         UsersModule,
@@ -25,4 +37,4 @@ import { RjwtStrategy } from './strategies/rjwt.strategy';
         JwtModule.registerAsync(jwtConfig.asProvider())
     ]
 })
-export class AuthModule {}
+export class AuthModule { }

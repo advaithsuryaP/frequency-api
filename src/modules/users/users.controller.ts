@@ -5,13 +5,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PublicUser } from './interfaces/public-user.interface';
 import { UuidParamDto } from 'src/common/dto/uuid-param.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import type { Request } from 'express';
 import { RoleEnum } from '../auth/enum/role.enum';
 import { Roles } from '../auth/decorators/roles.decorators';
 import { RoleAuthGuard } from '../auth/guards/role-auth/role-auth.guard';
 
-@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
