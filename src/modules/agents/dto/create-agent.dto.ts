@@ -22,7 +22,7 @@ export class CreateAgentDto {
 
     @IsEnum(AgentStatus)
     @IsOptional()
-    status: AgentStatus;
+    status?: AgentStatus;
 
     @IsEnum(AgentType)
     @IsNotEmpty()

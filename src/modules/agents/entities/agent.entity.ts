@@ -1,6 +1,5 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { AgentStatus, AgentType } from '../enums/agent.enum';
-import { PostEntity } from 'src/modules/posts/entities/post.entity';
 import { AgentConfiguration } from '../models/agent.model';
 
 @Entity({ name: 'agents' })
@@ -41,9 +40,6 @@ export class AgentEntity {
 
     @Column({ type: 'boolean', default: true })
     isActive: boolean;
-
-    @OneToMany(() => PostEntity, post => post.agent, { cascade: true })
-    posts: PostEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

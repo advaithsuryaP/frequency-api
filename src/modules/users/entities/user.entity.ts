@@ -1,5 +1,6 @@
 import { LogEntity } from 'src/common/log/entities/log.entity';
 import { RoleEnum } from 'src/modules/auth/enum/role.enum';
+import { PostEntity } from 'src/modules/posts/entities/post.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -27,6 +28,9 @@ export class UserEntity {
 
     @OneToMany(() => LogEntity, log => log.user, { cascade: true })
     logs: LogEntity[];
+
+    @OneToMany(() => PostEntity, post => post.user, { cascade: true })
+    posts: PostEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

@@ -4,10 +4,10 @@ export class PaginationDto {
     @IsNumber()
     @IsPositive()
     @IsOptional()
-    skip: number;
+    skip?: number;
 
     @IsNumber()
     @IsPositive()
     @IsOptional()
-    limit: number;
+    limit?: number;
 }

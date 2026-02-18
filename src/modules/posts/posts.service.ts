@@ -4,24 +4,24 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AgentQueryService } from '../agents/adapters/agent-query/agent-query.service';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { DEFAULT_PAGE_SIZE } from 'src/utils/constants';
+import { UserQueryService } from '../users/adapters/user-query/user-query.service';
 
 @Injectable()
 export class PostsService {
     constructor(
-        private readonly agentQueryService: AgentQueryService,
+        private readonly userQueryService: UserQueryService,
         @InjectRepository(PostEntity) private readonly postRepository: Repository<PostEntity>
     ) {}
 
-    async create(createPostDto: CreatePostDto): Promise<PostEntity> {
-        const { agentId, title, content } = createPostDto;
-        const agent = await this.agentQueryService.findAgentById(agentId);
+    async create(createPostDto: CreatePostDto, userId: string): Promise<PostEntity> {
+        const { content } = createPostDto;
 
-        if (!agent) throw new NotFoundException('Agent not found');
+        const user = await this.userQueryService.findUserById(userId);
+        if (!user) throw new NotFoundException('User not found');
 
-        const post = this.postRepository.create({ title, content, agent });
+        const post = this.postRepository.create({ content, user });
         return await this.postRepository.save(post);
     }
 

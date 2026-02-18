@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 import { EventModule, LogLevel } from '../enums/log.enum';
 
 export class CreateLogDto {
@@ -9,7 +9,6 @@ export class CreateLogDto {
     message: string;
 
     @IsUUID('4')
-    @IsOptional()
     userId: string;
 
     @IsEnum(LogLevel)
