@@ -9,9 +9,6 @@ export class PostEntity {
     @Column({ nullable: false })
     content: string;
 
-    @Column({ nullable: false, default: 0 })
-    likes: number;
-
     @ManyToOne(() => UserEntity, user => user, { nullable: true })
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
