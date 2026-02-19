@@ -15,7 +15,7 @@ export class PostsService {
         @InjectRepository(PostEntity) private readonly postRepository: Repository<PostEntity>
     ) {}
 
-    async create(createPostDto: CreatePostDto, userId: string): Promise<PostEntity> {
+    async create(userId: string, createPostDto: CreatePostDto): Promise<PostEntity> {
         const { content } = createPostDto;
 
         const user = await this.userQueryService.findUserById(userId);

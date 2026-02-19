@@ -15,7 +15,7 @@ export class PostsController {
     @Post()
     async create(@Body() createPostDto: CreatePostDto, @Req() request: Request): Promise<PostEntity> {
         const userId: string = (request.user as PublicUser).id;
-        return await this.postsService.create(createPostDto, userId);
+        return await this.postsService.create(userId, createPostDto);
     }
 
     @Get()
